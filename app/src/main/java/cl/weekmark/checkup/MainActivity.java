@@ -25,9 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-
 import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,27 +35,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cl.weekmark.checkup.models.Pais;
+import cl.weekmark.checkup.models.Patente;
 import cl.weekmark.checkup.models.TipoSolicitud;
 import cl.weekmark.checkup.presenters.PaisPresenter;
+import cl.weekmark.checkup.presenters.PatentePresenter;
 import cl.weekmark.checkup.presenters.TipoSolicitudPresenter;
 import cl.weekmark.checkup.views.IViewPais;
+import cl.weekmark.checkup.views.IViewPatente;
 import cl.weekmark.checkup.views.IViewTipoSolicitud;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        Response.Listener<String>, Response.ErrorListener, IViewPais, IViewTipoSolicitud {
+        Response.Listener<String>, Response.ErrorListener, IViewPais, IViewTipoSolicitud, IViewPatente {
 
-    private TextView mTextView;
-    public RequestQueue mRequestQueue;
-    private EditText mEdit;
-    public String mKeyCookie = "ASP.NET_SessionId";
-    public String mValueSessionId;
-    private PaisPresenter mPaisPresenter;
-    private TipoSolicitudPresenter mTipoSolicitudPresenter;
-    private Spinner mSpinnerPaises;
-    private Spinner mSpinnerTiposSolicitud;
-    private String hash = "";
-    private String idw = "";
+    public  TextView                mTextView;
+    public  RequestQueue            mRequestQueue;
+    private EditText                mEdit;
+    public  String                  mNameCookie = "ASP.NET_SessionId";
+    public  String                  mValueCookie;
+    private PaisPresenter           mPaisPresenter;
+    private TipoSolicitudPresenter  mTipoSolicitudPresenter;
+    private PatentePresenter        mPatentePresenter;
+    private Spinner                 mSpinnerPaises;
+    private Spinner                 mSpinnerTiposSolicitud;
+    private String                  mHash = "";
+    private String                  mIDW = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,15 +82,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.mSpinnerPaises = (Spinner) findViewById(R.id.CboPaises);
         this.mSpinnerTiposSolicitud = (Spinner) findViewById(R.id.CboTipos);
 
+        this.mRequestQueue = Volley.newRequestQueue(this);
         initialize();
     }
 
     private void initialize() {
         /************************************Primera Consulta**************************************/
-        mRequestQueue = Volley.newRequestQueue(this);
         String url = "https://ion.inapi.cl/Patente/ConsultaAvanzadaPatentes.aspx";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, this, this) {
-
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 //Map<String,String> params =  super.getHeaders();
@@ -109,13 +110,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.i("response", response.headers.toString());
                 Map<String, String> responseHeaders = response.headers;
                 String rawCookies = responseHeaders.get("Set-Cookie");
-                mValueSessionId = rawCookies.split(";")[0].split("=")[1];
-                Log.i("cookies->", mValueSessionId);
+                mValueCookie = rawCookies.split(";")[0].split("=")[1];
+                Log.i("cookies->", mValueCookie);
                 return super.parseNetworkResponse(response);
             }
         };
-        mRequestQueue.add(stringRequest);
-        /**Fin*********************************************************************************/}
+        addRequest(stringRequest);
+        /**Fin*************************************************************************************/
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,105 +141,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public void onClick(View v) {
 
+
+       /*
         v.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mTextView.getWindowToken(), 0);
         mTextView.setText("Consultando......");
+        mPatentePresenter.buscar();*/
 
-        String numSolicitud = mEdit.getText().toString();
-        if (!numSolicitud.isEmpty()) {
 
-            final ParametrosConsultaPatente parametros = new ParametrosConsultaPatente();
-            parametros.setHash(hash);
-            parametros.setIDW(idw);
-            parametros.setOri(1);
-            parametros.setSol_Nro(numSolicitud);
-
-            Gson gson = new Gson();
-            final String requestBody = gson.toJson(parametros);
-            Log.i("post_data->", requestBody);
-
-            String url = "https://ion.inapi.cl/Patente/ConsultaAvanzadaPatentes.aspx/GetCaratula";
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
-
-                        @Override
-                        public void onResponse(String response) {
-                            //Response
-                            //Log.i("Segundo Response->", response);
-                            try {
-                                JSONObject json = new JSONObject(response);
-                                if (json.has("d")) {
-                                    String content = json.getString("d");
-                                    mTextView.setText(content);
-                                }
-                            } catch (Exception ex) {
-                                Log.d("Error Convert JSON", ex.getMessage());
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("Volly Error", error.getMessage());
-                            NetworkResponse response = error.networkResponse;
-                            if (response != null) {
-                                mTextView.setText("Error" + error.getStackTrace());
-                            }
-                        }
-                    }
-            ) {
-
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> params = null;
-                    if (params == null) params = new HashMap<String, String>();
-
-                    params.put("User-agent", "Mozilla/5.0");
-                    params.put("Content-Length", Integer.toString(requestBody.length()));
-                    params.put("Host", "ion.inapi.cl");
-                    params.put("Referer", "https://ion.inapi.cl/Patente/ConsultaAvanzadaPatentes.aspx");
-                    params.put("Cookie", mKeyCookie + "=" + mValueSessionId);
-                    params.put("Origin", "https://ion.inapi.cl");
-                    params.put("Connection", "keep-alive");
-                    return params;
-                }
-
-                @Override
-                protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                    // since we don't know which of the two underlying network vehicles
-                    // will Volley use, we have to handle and store session cookies manually
-                    //Log.i("response", response.headers.toString());
-                    //Map<String, String> responseHeaders = response.headers;
-                    //String rawCookies = responseHeaders.get("Set-Cookie");
-                    //String sessionId = rawCookies.split(";")[0].split("=")[1];
-                    //Log.i("cookies->", sessionId);
-                    return super.parseNetworkResponse(response);
-                }
-
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-
-                @Override
-                public byte[] getBody() throws AuthFailureError {
-                    try {
-                        return requestBody == null ? null : requestBody.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee) {
-                        Log.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody);
-                        return null;
-                    }
-                }
-            };
-
-            mRequestQueue.add(stringRequest);
-        }
     }
 
     @Override
@@ -246,17 +161,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Matcher m = p.matcher(response);
 
         if (m.find()) {
-            hash = m.group(1);
-            idw = m.group(2);
+            mHash = m.group(1);
+            mIDW = m.group(2);
+
+            mPaisPresenter = new PaisPresenter(this);
+            mPaisPresenter.getListPaises();
+
+            mTipoSolicitudPresenter = new TipoSolicitudPresenter(this);
+            mTipoSolicitudPresenter.getListTipoSolicitud();
+
+            mPatentePresenter = new PatentePresenter(this);
         }
-
-        mPaisPresenter = new PaisPresenter(this);
-        mPaisPresenter.getListPaises();
-
-        mTipoSolicitudPresenter = new TipoSolicitudPresenter(this);
-        mTipoSolicitudPresenter.getListTipoSolicitud();
-
-        //mTextView.setText("idw->" +  idw + " hash->" + hash);
     }
 
     @Override
@@ -290,4 +205,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, sTipos);
         mSpinnerTiposSolicitud.setAdapter(adapter);
     }
+
+    @Override
+    public void setPatente(Patente patente)
+    {
+        mTextView.setText(patente.toJSON());
+    }
+
+    @Override
+    public String getNroSolicitud()
+    {
+        return mEdit.getText().toString();
+    }
+
+    @Override
+    public String getIDW()
+    {
+        return this.mIDW;
+    }
+
+    @Override
+    public String getHash() {
+        return mHash;
+    }
+
+    @Override
+    public String getCookie()
+    {
+        return this.mNameCookie + "=" + this.mValueCookie;
+    }
+
+    @Override
+    public void addRequest(StringRequest request)
+    {
+        this.mRequestQueue.add(request);
+    }
+
 }

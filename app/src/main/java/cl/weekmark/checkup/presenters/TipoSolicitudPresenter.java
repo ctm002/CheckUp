@@ -23,10 +23,10 @@ import cl.weekmark.checkup.views.IViewTipoSolicitud;
 
 public class TipoSolicitudPresenter {
 
-    private IViewTipoSolicitud view;
+    private IViewTipoSolicitud _View;
 
     public TipoSolicitudPresenter(IViewTipoSolicitud view){
-        this.view = view;
+        this._View = view;
     }
 
     public void getListTipoSolicitud(){
@@ -36,7 +36,7 @@ public class TipoSolicitudPresenter {
                     @Override
                     public void onResponse(String response) {
                         //Response
-                        Log.i("Response->", response);
+                        Log.i("Tipos Response->", response);
                         List<TipoSolicitud> tipos = new ArrayList<TipoSolicitud>();
                         try
                         {
@@ -49,7 +49,7 @@ public class TipoSolicitudPresenter {
                                     tipos.add(new TipoSolicitud(JSONObject.getString("Valor"), JSONObject.getString("Tipo")));
                                 }
                             }
-                            view.setListTipoSolicitud(tipos);
+                            _View.setListTipoSolicitud(tipos);
                         }
                         catch (Exception ex)
                         {
@@ -78,7 +78,7 @@ public class TipoSolicitudPresenter {
                 if (params == null) params = new HashMap<String, String>();
                 params.put("User-agent", "Mozilla/5.0");
                 params.put("Content-Length", Integer.toString(this.requestBody.length()));
-                params.put("Cookie",  ((MainActivity)view).mKeyCookie + "=" +  ((MainActivity)view).mValueSessionId);
+                params.put("Cookie",  ((MainActivity) _View).mNameCookie + "=" +  ((MainActivity) _View).mValueCookie);
                 params.put("Referer", "https://ion.inapi.cl/Patente/ConsultaAvanzadaPatentes.aspx");
                 params.put("Origin", "https://ion.inapi.cl");
                 params.put("Host", "ion.inapi.cl");
@@ -108,15 +108,14 @@ public class TipoSolicitudPresenter {
             @Override
             public byte[] getBody() throws AuthFailureError {
                 try {
-                    //Gson gson = new Gson();
-                    //this.requestBody =  "{}";//gson.toJson("{}");
-                    return this.requestBody == null ? null : this.requestBody.getBytes("utf-8");
+                     return this.requestBody == null ? null : this.requestBody.getBytes("utf-8");
                 } catch (UnsupportedEncodingException uee) {
                     //Log.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody);
                     return null;
                 }
             }
         };
-        view.setListTipoSolicitud(null);
+
+        ((MainActivity) _View).mRequestQueue.add(stringRequest);
     }
 }

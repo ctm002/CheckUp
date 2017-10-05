@@ -1,11 +1,4 @@
 <resources>
-    <string name="app_name">CheckUp</string>
+    <string name="app_name">Sargent</string>
     <string name="action_settings">Settings</string>
-
-    <string-array name="paises">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
 </resources>

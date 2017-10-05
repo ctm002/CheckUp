@@ -8,7 +8,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.json.JSONObject;
 
 
 import cl.weekmark.checkup.MainActivity;
@@ -31,12 +29,12 @@ import cl.weekmark.checkup.views.IViewPais;
 
 public class PaisPresenter {
 
-    private IViewPais _IViewPais;
+    private IViewPais _IView;
 
 
     public PaisPresenter(IViewPais view)
     {
-        _IViewPais = view;
+        _IView = view;
     }
 
     public void getListPaises()
@@ -60,7 +58,7 @@ public class PaisPresenter {
                                     paises.add(new Pais(JSONObject.getString("Pais"), JSONObject.getString("Nombre")));
                                 }
                             }
-                            _IViewPais.setListPaises(paises);
+                            _IView.setListPaises(paises);
                         }
                         catch (Exception ex)
                         {
@@ -89,7 +87,7 @@ public class PaisPresenter {
                 if (params == null) params = new HashMap<String, String>();
                 params.put("User-agent", "Mozilla/5.0");
                 params.put("Content-Length", Integer.toString(this.requestBody.length()));
-                params.put("Cookie",  ((MainActivity)_IViewPais).mKeyCookie + "=" +  ((MainActivity)_IViewPais).mValueSessionId);
+                params.put("Cookie",  ((MainActivity) _IView).mNameCookie + "=" +  ((MainActivity) _IView).mValueCookie);
                 params.put("Referer", "https://ion.inapi.cl/Patente/ConsultaAvanzadaPatentes.aspx");
                 params.put("Origin", "https://ion.inapi.cl");
                 params.put("Host", "ion.inapi.cl");
@@ -129,7 +127,7 @@ public class PaisPresenter {
             }
         };
 
-        ((MainActivity)_IViewPais).mRequestQueue.add(stringRequest);
+        ((MainActivity) _IView).mRequestQueue.add(stringRequest);
 
 
     }

@@ -1,4 +1,4 @@
-package cl.weekmark.checkup;
+package cl.weekmark.checkup.models;
 
 /**
  * Created by Carlos_Tapia on 03-10-2017.
@@ -11,8 +11,7 @@ public class ParametrosConsultaPatente {
     private int Ori;
     private String Sol_Nro;
 
-    public ParametrosConsultaPatente(){
-    }
+    public ParametrosConsultaPatente(){}
 
     public void setIDW(String IDW) {
         this.IDW = IDW;
