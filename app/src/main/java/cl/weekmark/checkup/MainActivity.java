@@ -248,103 +248,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (m.find()) {
             hash = m.group(1);
             idw = m.group(2);
-
-            /**
-             final ParametrosConsultaPatente parametros = new ParametrosConsultaPatente();
-             parametros.setHash(hash);
-             parametros.setIDW(idw);
-             parametros.setOri(1);
-             parametros.setSol_Nro(numSolicitud);
-
-             Gson gson = new Gson();
-             final String requestBody = gson.toJson(parametros);
-             Log.i("post_data->", requestBody);
-
-             String url = "https://ion.inapi.cl/Patente/ConsultaAvanzadaPatentes.aspx/GetCaratula";
-             StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-             new Response.Listener<String>() {
-
-            @Override public void onResponse(String response) {
-            //Response
-            //Log.i("Segundo Response->", response);
-            try
-            {
-            JSONObject json = new JSONObject(response);
-            if (json.has("d"))
-            {
-            String content = json.getString("d");
-            mTextView.setText(content);
-            }
-            }
-            catch (Exception ex)
-            {
-            Log.d("Error Convert JSON", ex.getMessage());
-            }
-            }
-            },
-             new Response.ErrorListener() {
-
-            @Override public void onErrorResponse(VolleyError error) {
-            Log.e("Volly Error", error.getMessage());
-            NetworkResponse response = error.networkResponse;
-            if (response != null) {
-            mTextView.setText("Error" + error.getStackTrace());
-            }
-            }
-            }
-             ) {
-
-            @Override public Map<String, String> getHeaders() throws AuthFailureError {
-            //Map<String,String> params =  super.getHeaders();
-
-            Map<String, String> params = null;
-            if (params == null) params = new HashMap<String, String>();
-
-            params.put("User-agent", "Mozilla/5.0");
-            params.put("Content-Length", Integer.toString(requestBody.length()));
-            params.put("Host", "ion.inapi.cl");
-            params.put("Referer", "https://ion.inapi.cl/Patente/ConsultaAvanzadaPatentes.aspx");
-            params.put("Cookie", mKeyCookie + "=" + mValueSessionId);
-            params.put("Origin", "https://ion.inapi.cl");
-            params.put("Connection", "keep-alive");
-            return params;
-            }
-
-            @Override protected Response<String> parseNetworkResponse(NetworkResponse response) {
-            // since we don't know which of the two underlying network vehicles
-            // will Volley use, we have to handle and store session cookies manually
-            //Log.i("response", response.headers.toString());
-            //Map<String, String> responseHeaders = response.headers;
-            //String rawCookies = responseHeaders.get("Set-Cookie");
-            //String sessionId = rawCookies.split(";")[0].split("=")[1];
-            //Log.i("cookies->", sessionId);
-
-            return super.parseNetworkResponse(response);
-            }
-
-            @Override public String getBodyContentType() {
-            return "application/json; charset=utf-8";
-            }
-
-            @Override public byte[] getBody() throws AuthFailureError {
-            try {
-            return requestBody == null ? null : requestBody.getBytes("utf-8");
-            } catch (UnsupportedEncodingException uee) {
-            Log.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody);
-            return null;
-            }
-            }
-            };
-
-             mRequestQueue.add(stringRequest);
-             **/
         }
 
-        //Paises
         mPaisPresenter = new PaisPresenter(this);
         mPaisPresenter.getListPaises();
 
-        //Tipos
         mTipoSolicitudPresenter = new TipoSolicitudPresenter(this);
         mTipoSolicitudPresenter.getListTipoSolicitud();
 
