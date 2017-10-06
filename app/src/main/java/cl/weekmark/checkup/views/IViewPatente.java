@@ -1,31 +1,46 @@
 package cl.weekmark.checkup.views;
 
 import cl.weekmark.checkup.models.Patente;
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
-/**
- * Created by Carlos_Tapia on 05-10-2017.
- */
+import java.util.ArrayList;
+import java.util.List;
 
 public interface IViewPatente {
 
-    void setPatente(Patente patente);
+    void setListPatentes(ArrayList<Patente> patentes);
 
     String getHash();
 
+    void setHash(String hash);
+
     String getIDW();
+
+    void setIDW(String idw);
 
     String getNroSolicitud();
 
     String getCookie();
 
+    String getTitulo();
+
+    String getResumen();
+
+    String getNombreSolicitante();
+
+    String getPaisSolicitante();
+
+    String getInventor();
+
+    String getTipoPatente();
+
     void addRequest(StringRequest request);
 
+    String getCip();
+
+    String getNroPrioridad();
+
+    String getRegistro();
+
+    String getPaisPrioridad();
 }

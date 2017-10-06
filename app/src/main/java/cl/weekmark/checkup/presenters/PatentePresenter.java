@@ -7,11 +7,18 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+
 import com.google.gson.Gson;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import cl.weekmark.checkup.models.ParametrosConsultaPatente;
 import cl.weekmark.checkup.models.Patente;
 import cl.weekmark.checkup.views.IViewPatente;
@@ -30,6 +37,18 @@ public class PatentePresenter {
 
     public void buscar()
     {
+        String titulo = _View.getTitulo();
+        String resumen = _View.getResumen();
+        String solicitante = _View.getNombreSolicitante();
+        String paisSolicitante = _View.getPaisSolicitante();
+        String inventor = _View.getInventor();
+        String tipoPatente = _View.getTipoPatente();
+        String cip = _View.getCip();
+        String registro = _View.getRegistro();
+        String paisPrioridad = _View.getPaisPrioridad();
+        String paisNroPrioridad = _View.getNroPrioridad();
+
+
         String solicitud =  _View.getNroSolicitud();
         String hash = _View.getHash();
         String idw = _View.getIDW();
@@ -53,12 +72,25 @@ public class PatentePresenter {
                         @Override
                         public void onResponse(String response) {
                             try {
-                                JSONObject json = new JSONObject(response);
-                                if (json.has("d")) {
-                                    String content = json.getString("d");
-                                    Patente patente = new Patente();
-                                    patente.setContent(content);
-                                    _View.setPatente(patente);
+                                JSONObject jsonResponse = new JSONObject(response);
+                                if (jsonResponse.has("d")) {
+
+                                    String d = jsonResponse.getString("d");
+                                    JSONObject jsonObject = new JSONObject(d);
+                                    String strHash = jsonObject.getString("Hash");
+                                    String strPatentes = jsonObject.getString("Patentes");
+                                    Log.i("New Hash", strHash);
+                                    Log.i("Patentes", strPatentes);
+
+                                    ArrayList<Patente> patentes = new ArrayList<Patente>();
+
+                                    JSONArray arr = new JSONArray(strPatentes);
+                                    for (int i=0; i < arr.length(); i++) {
+                                        Patente p = new Patente(arr.getJSONObject(i));
+                                        patentes.add(p);
+                                    }
+                                    _View.setHash(strHash);
+                                    _View.setListPatentes(patentes);
                                 }
                             } catch (Exception ex) {
                                 Log.d("Error Convert JSON", ex.getMessage());
@@ -74,7 +106,7 @@ public class PatentePresenter {
                             if (response != null) {
                                 Patente patente = new Patente();
                                 patente.setContent(error.getStackTrace().toString());
-                                _View.setPatente(patente);
+                                _View.setListPatentes(null);
                             }
                         }
                     }

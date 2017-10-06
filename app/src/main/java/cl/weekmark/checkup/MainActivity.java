@@ -1,6 +1,7 @@
 package cl.weekmark.checkup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,9 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import org.json.JSONObject;
-import java.io.UnsupportedEncodingException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,16 +47,17 @@ import cl.weekmark.checkup.views.IViewTipoSolicitud;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         Response.Listener<String>, Response.ErrorListener, IViewPais, IViewTipoSolicitud, IViewPatente {
 
-    public  TextView                mTextView;
+    public  TextView                mTxtResults;
     public  RequestQueue            mRequestQueue;
-    private EditText                mEdit;
+    private EditText                mTxtNroSolicitud;
     public  String                  mNameCookie = "ASP.NET_SessionId";
     public  String                  mValueCookie;
     private PaisPresenter           mPaisPresenter;
     private TipoSolicitudPresenter  mTipoSolicitudPresenter;
     private PatentePresenter        mPatentePresenter;
-    private Spinner                 mSpinnerPaises;
-    private Spinner                 mSpinnerTiposSolicitud;
+    private Spinner mCboPaisSolicitante;
+    private Spinner mCboPaisPrioridad;
+    private Spinner mCboTipoPatente;
     private String                  mHash = "";
     private String                  mIDW = "";
 
@@ -68,19 +68,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mEdit = (EditText) findViewById(R.id.TxtEditNroSolicitud);
-        mEdit.setText("200502383");
+        mTxtNroSolicitud = (EditText) findViewById(R.id.TxtNroSolicitud);
+        mTxtNroSolicitud.setText("200502383");
 
         Button btn = (Button) findViewById(R.id.BtnBuscar);
         btn.setOnClickListener(this);
 
-        mTextView = (TextView) findViewById(R.id.TxtResultados);
-        mTextView.setMovementMethod(new ScrollingMovementMethod());
-        mTextView.setText("");
+        mTxtResults = (TextView) findViewById(R.id.TxtResultados);
+        mTxtResults.setMovementMethod(new ScrollingMovementMethod());
+        mTxtResults.setText("");
 
 
-        this.mSpinnerPaises = (Spinner) findViewById(R.id.CboPaises);
-        this.mSpinnerTiposSolicitud = (Spinner) findViewById(R.id.CboTipos);
+        this.mCboPaisSolicitante = (Spinner) findViewById(R.id.CboPaisSolicitante);
+        this.mCboPaisPrioridad= (Spinner) findViewById(R.id.CboPaisPrioridad);
+        this.mCboTipoPatente = (Spinner) findViewById(R.id.CboTipoPatente);
 
         this.mRequestQueue = Volley.newRequestQueue(this);
         initialize();
@@ -92,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, this, this) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                //Map<String,String> params =  super.getHeaders();
-
                 Map<String, String> params = null;
                 if (params == null) params = new HashMap<String, String>();
 
@@ -105,8 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                // since we don't know which of the two underlying network vehicles
-                // will Volley use, we have to handle and store session cookies manually
                 Log.i("response", response.headers.toString());
                 Map<String, String> responseHeaders = response.headers;
                 String rawCookies = responseHeaders.get("Set-Cookie");
@@ -143,16 +140,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-
-
-       /*
         v.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mTextView.getWindowToken(), 0);
-        mTextView.setText("Consultando......");
-        mPatentePresenter.buscar();*/
-
-
+        imm.hideSoftInputFromWindow(mTxtResults.getWindowToken(), 0);
+        mPatentePresenter.buscar();
     }
 
     @Override
@@ -161,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Matcher m = p.matcher(response);
 
         if (m.find()) {
-            mHash = m.group(1);
-            mIDW = m.group(2);
+            setHash(m.group(1));
+            setIDW(m.group(2));
 
             mPaisPresenter = new PaisPresenter(this);
             mPaisPresenter.getListPaises();
@@ -192,7 +183,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             sPaises.add(p.Nombre);
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, sPaises);
-        mSpinnerPaises.setAdapter(adapter);
+        mCboPaisSolicitante.setAdapter(adapter);
+        mCboPaisPrioridad.setAdapter(adapter);
     }
 
     @Override
@@ -203,19 +195,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             sTipos.add(t.tipo);
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, sTipos);
-        mSpinnerTiposSolicitud.setAdapter(adapter);
+        mCboTipoPatente.setAdapter(adapter);
     }
 
     @Override
-    public void setPatente(Patente patente)
+    public void setListPatentes(ArrayList<Patente> patentes)
     {
-        mTextView.setText(patente.toJSON());
+        Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
+        intent.putExtra("patentes", patentes);
+        startActivity(intent);
     }
 
     @Override
     public String getNroSolicitud()
     {
-        return mEdit.getText().toString();
+        return mTxtNroSolicitud.getText().toString();
     }
 
     @Override
@@ -225,8 +219,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public void setIDW(String idw) {
+        this.mIDW = idw;
+    }
+
+    @Override
     public String getHash() {
         return mHash;
+    }
+
+    @Override
+    public void setHash(String hash) {
+        this.mHash = hash;
     }
 
     @Override
@@ -236,9 +240,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public String getTitulo() {
+        return ((TextView) findViewById(R.id.TxtTitulo)).getText().toString();
+    }
+
+    @Override
+    public String getResumen() {
+        return ((TextView) findViewById(R.id.TxtResumen)).getText().toString();
+    }
+
+    @Override
+    public String getNombreSolicitante() {
+        return ((TextView) findViewById(R.id.TxtNombreSolicitante)).getText().toString();
+    }
+
+    @Override
+    public String getPaisSolicitante() {
+        return mCboPaisSolicitante.getSelectedItem().toString();
+    }
+
+    @Override
+    public String getInventor() {
+        return ((TextView) findViewById(R.id.TxtInventor)).getText().toString();
+    }
+
+    @Override
+    public String getTipoPatente() {
+        return mCboTipoPatente.getSelectedItem().toString();
+    }
+
+    @Override
     public void addRequest(StringRequest request)
     {
         this.mRequestQueue.add(request);
+    }
+
+    @Override
+    public String getCip() {
+        return ((TextView) findViewById(R.id.TxtCip)).getText().toString();
+    }
+
+    @Override
+    public String getNroPrioridad() {
+        return ((TextView) findViewById(R.id.TxtNroPrioridad)).getText().toString();
+    }
+
+    @Override
+    public String getRegistro() {
+        return ((TextView) findViewById(R.id.TxtNroRegistro)).getText().toString();
+    }
+
+    @Override
+    public String getPaisPrioridad() {
+        return mCboPaisPrioridad.getSelectedItem().toString();
     }
 
 }

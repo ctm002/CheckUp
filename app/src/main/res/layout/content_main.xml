@@ -1,102 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cl.weekmark.checkup.MainActivity"
-    tools:showIn="@layout/activity_main"
-    tools:layout_editor_absoluteY="81dp"
-    tools:layout_editor_absoluteX="0dp">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <LinearLayout
-        android:layout_width="344dp"
-        android:layout_height="495dp"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
-
-        <TextView
-        android:id="@+id/TxtNroSolicitud"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:text="Número de Solicitud" />
-
-        <EditText
-            android:id="@+id/TxtEditNroSolicitud"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/TxtTitulo"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:text="Titulo">
-        </TextView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/TxtEditTitulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/TxtResumen"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:text="Resumen" />
+                        <TextView
+                            android:id="@+id/LblNroSolicitud"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Número de Solicitud" />
 
-        <EditText
-            android:id="@+id/TxtEditResumen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                        <EditText
+                            android:id="@+id/TxtNroSolicitud"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/TxtPais"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:text="Pais Solicititante" />
-        <Spinner
-            android:id="@+id/CboPaises"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+                        <TextView
+                            android:id="@+id/LblTitulo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Titulo"></TextView>
 
-        <TextView
-            android:id="@+id/TxtTipos"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:text="Tipo de  Solicitud" />
-        <Spinner
-            android:id="@+id/CboTipos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+                        <EditText
+                            android:id="@+id/TxtTitulo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/BtnBuscar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_row="2"
-            android:text="Buscar"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="86dp" />
+                        <TextView
+                            android:id="@+id/LblResumen"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Resumen" />
 
-        <TextView
-            android:id="@+id/TxtResultados"
-            android:layout_width="match_parent"
-            android:scrollbars="horizontal"
-            android:layout_height="495dp"
-            android:layout_weight="1"
-            android:text=""
-            tools:layout_editor_absoluteY="8dp"
-            tools:layout_editor_absoluteX="8dp" />
+                        <EditText
+                            android:id="@+id/TxtResumen"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
 
-    </LinearLayout>
+                        <TextView
+                            android:id="@+id/LblNombreSolitante"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Nombre Solicitante" />
 
-</android.support.constraint.ConstraintLayout>
+                        <EditText
+                            android:id="@+id/TxtNombreSolicitante"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/TxtPaisSolicitante"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="País Solicititante" />
+
+                        <Spinner
+                            android:id="@+id/CboPaisSolicitante"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/LblInventor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Inventor" />
+
+
+                        <EditText
+                            android:id="@+id/TxtInventor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/LblTipoPatente"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Tipo de Patente" />
+
+                        <Spinner
+                            android:id="@+id/CboTipoPatente"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/LblCip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Cip" />
+
+                        <EditText
+                            android:id="@+id/TxtCip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/LblRegistro"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Nro. de Registro" />
+
+                        <EditText
+                            android:id="@+id/TxtNroRegistro"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/LblPaisPrioridad"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="País Prioridad" />
+
+                        <Spinner
+                            android:id="@+id/CboPaisPrioridad"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/LblNroPrioridad"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Nro. de Prioridad" />
+
+                        <EditText
+                            android:id="@+id/TxtNroPrioridad"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <Button
+                            android:id="@+id/BtnBuscar"
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Buscar"
+                            android:textAlignment="center"></Button>
+
+                        <TextView
+                            android:id="@+id/TxtResultados"
+                            android:layout_width="match_parent"
+                            android:layout_height="495dp"
+                            android:layout_weight="1"
+                            android:scrollbars="horizontal"
+                            android:text=""
+                            tools:layout_editor_absoluteX="8dp"
+                            tools:layout_editor_absoluteY="8dp" />
+
+
+                        />
+                </LinearLayout>
+        </ScrollView>
+
+</LinearLayout>
+
+
 
 
 
