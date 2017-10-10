@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import cl.weekmark.checkup.models.Patente;
 
@@ -23,16 +24,10 @@ public class ResultsActivity extends AppCompatActivity {
 
             super.onCreate(bundle);
             setContentView(R.layout.activity_results);
-
-
-
             listItems=new ArrayList<String>();
-
-
-            ArrayList<Patente> patentes = (ArrayList<Patente>)getIntent().getSerializableExtra("patentes");
-            /*
+            Patente[] patentes = (Patente[])getIntent().getSerializableExtra("patentes");
             if (patentes != null) {
-                for (Patente p : patentes) {
+/*                for (Patente p : patentes) {
 
                     StringBuilder sb = new StringBuilder();
                     sb.append("Nro Solicitud\n");
@@ -46,16 +41,14 @@ public class ResultsActivity extends AppCompatActivity {
                     listItems.add(sb.toString());
                 }
                 adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1 , listItems);
-                setListAdapter(adapter);
-            }*/
+                setListAdapter(adapter);*/
 
 
-            ListAdapterPatente adapter = new ListAdapterPatente(this, patentes);
-            ListView lv = (ListView) findViewById(R.id.lv_patentes);
-            if (lv != null)
-                lv.setAdapter(adapter);
-
-
+                ListAdapterPatente adapter = new ListAdapterPatente(this, new ArrayList<Patente>(Arrays.asList(patentes)));
+                ListView lv = (ListView) findViewById(R.id.lv_patentes);
+                if (lv != null)
+                    lv.setAdapter(adapter);
+            }
 
         }catch (Exception ex)
         {

@@ -7,13 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
+
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,6 +30,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -234,9 +234,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void setListPatentes(ArrayList<Patente> patentes)
     {
+        Patente[] temp =  new Patente[patentes.size()];
+        Patente[] aPatentes = patentes.toArray(temp);
         Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
-        intent.putExtra("patentes", patentes);
+        intent.putExtra("patentes", aPatentes);
         startActivity(intent);
+//        startActivityForResult(intent, 0);
     }
 
     @Override
