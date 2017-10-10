@@ -4,14 +4,14 @@ package cl.weekmark.checkup.models;
  * Created by Carlos_Tapia on 03-10-2017.
  */
 
-public class ParametrosConsultaPatente {
+public class ParametrosConsultaCaratula {
 
     private String IDW;
     private String Hash;
     private int Ori;
     private String Sol_Nro;
 
-    public ParametrosConsultaPatente(){}
+    public ParametrosConsultaCaratula(){}
 
     public void setIDW(String IDW) {
         this.IDW = IDW;

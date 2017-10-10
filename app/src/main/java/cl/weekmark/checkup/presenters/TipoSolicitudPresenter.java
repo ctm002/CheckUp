@@ -36,13 +36,13 @@ public class TipoSolicitudPresenter {
                     @Override
                     public void onResponse(String response) {
                         //Response
-                        Log.i("Tipos Response->", response);
+                        //Log.i("Tipos Response->", response);
                         List<TipoSolicitud> tipos = new ArrayList<TipoSolicitud>();
                         try
                         {
                             JSONObject json = new JSONObject(response);
                             JSONArray childArray = new JSONArray(json.getString("d"));
-                            Log.i("Cantidad->", Integer.toString(childArray.length()));
+                            //Log.i("Cantidad->", Integer.toString(childArray.length()));
                             for (int i = 0; i < childArray.length(); i++) {
                                 JSONObject JSONObject = childArray.getJSONObject(i);
                                 if (!JSONObject.getString("Valor").isEmpty()) {

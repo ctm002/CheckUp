@@ -6,8 +6,25 @@ package cl.weekmark.checkup.models;
 
 public class TipoSolicitud {
 
-    public String valor;
-    public String tipo;
+    private String valor;
+
+    public String getValue() {
+        return valor;
+    }
+
+    public void setValue(String valor) {
+        this.valor = valor;
+    }
+
+
+    private  String tipo;
+    public String getText() {
+        return tipo;
+    }
+
+    public void setText(String tipo) {
+        this.tipo = tipo;
+    }
 
     public TipoSolicitud(String valor, String tipo) {
         this.valor = valor;

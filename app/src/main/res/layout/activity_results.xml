@@ -6,8 +6,9 @@
     android:layout_height="fill_parent" >
 
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/lv_patentes"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:drawSelectorOnTop="false" />
 </LinearLayout>
+

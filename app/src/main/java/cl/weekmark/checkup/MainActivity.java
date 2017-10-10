@@ -1,5 +1,7 @@
 package cl.weekmark.checkup;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +12,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,7 +51,6 @@ import cl.weekmark.checkup.views.IViewTipoSolicitud;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         Response.Listener<String>, Response.ErrorListener, IViewPais, IViewTipoSolicitud, IViewPatente {
 
-    public  TextView                mTxtResults;
     public  RequestQueue            mRequestQueue;
     private EditText                mTxtNroSolicitud;
     public  String                  mNameCookie = "ASP.NET_SessionId";
@@ -60,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Spinner mCboTipoPatente;
     private String                  mHash = "";
     private String                  mIDW = "";
+    private String mTipoPatenteSelected;
+
+    private ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,22 +76,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
 
         mTxtNroSolicitud = (EditText) findViewById(R.id.TxtNroSolicitud);
-        mTxtNroSolicitud.setText("200502383");
+        //mTxtNroSolicitud.setText("200502383");
 
         Button btn = (Button) findViewById(R.id.BtnBuscar);
         btn.setOnClickListener(this);
 
-        mTxtResults = (TextView) findViewById(R.id.TxtResultados);
-        mTxtResults.setMovementMethod(new ScrollingMovementMethod());
-        mTxtResults.setText("");
-
-
         this.mCboPaisSolicitante = (Spinner) findViewById(R.id.CboPaisSolicitante);
         this.mCboPaisPrioridad= (Spinner) findViewById(R.id.CboPaisPrioridad);
         this.mCboTipoPatente = (Spinner) findViewById(R.id.CboTipoPatente);
+        this.mCboTipoPatente.setSelection(0);
 
         this.mRequestQueue = Volley.newRequestQueue(this);
         initialize();
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        progressDialog= new ProgressDialog(this);
     }
 
     private void initialize() {
@@ -140,10 +147,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        v.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mTxtResults.getWindowToken(), 0);
-        mPatentePresenter.buscar();
+
+        try {
+            v.requestFocus();
+            progressDialog.setMessage("Consultando");
+            progressDialog.show();
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mPatentePresenter.buscarPorParametros();
+                }
+            });
+            t.join();
+            t.start();
+        } catch(Exception ex)
+        {
+            Log.e("ERROR", ex.getMessage());
+        }
     }
 
     @Override
@@ -189,13 +209,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void setListTipoSolicitud(List<TipoSolicitud> tipos) {
-        ArrayList<String> sTipos = new ArrayList<String>();
 
-        for (TipoSolicitud t : tipos) {
-            sTipos.add(t.tipo);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, sTipos);
+        AdapterView.OnItemSelectedListener onItemSelectedListener2 =
+            new AdapterView.OnItemSelectedListener(){
+
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view,
+                                           int position, long id) {
+                    TipoSolicitud tipoSelected = (TipoSolicitud)(parent.getItemAtPosition(position));
+                    setTipoPatente(String.valueOf(tipoSelected.getValue()));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+
+            };
+
+        TipoSolicitud[] aTipos = tipos.toArray(new TipoSolicitud[tipos.size()]);
+        ListAdapterTipoPatente adapter = new ListAdapterTipoPatente(this, android.R.layout.simple_spinner_item, aTipos);
         mCboTipoPatente.setAdapter(adapter);
+        mCboTipoPatente.setOnItemSelectedListener(onItemSelectedListener2);
     }
 
     @Override
@@ -266,7 +299,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public String getTipoPatente() {
-        return mCboTipoPatente.getSelectedItem().toString();
+        return this.mTipoPatenteSelected;
+    }
+
+    public void setTipoPatente(String tipo)
+    {
+        this.mTipoPatenteSelected = tipo;
     }
 
     @Override
@@ -295,4 +333,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return mCboPaisPrioridad.getSelectedItem().toString();
     }
 
+
+    @Override
+    public void setHideProgressDialog(boolean b){
+
+        if(progressDialog != null)
+        {
+            progressDialog.hide();
+        }
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
 }

@@ -1,5 +1,7 @@
 package cl.weekmark.checkup.views;
 
+import android.app.Activity;
+
 import cl.weekmark.checkup.models.Patente;
 import com.android.volley.toolbox.StringRequest;
 
@@ -43,4 +45,8 @@ public interface IViewPatente {
     String getRegistro();
 
     String getPaisPrioridad();
+
+    void setHideProgressDialog(boolean b);
+
+    Activity getActivity();
 }

@@ -45,13 +45,13 @@ public class PaisPresenter {
                     @Override
                     public void onResponse(String response) {
                         //Response
-                        Log.i("Paises Response->", response);
+                        //Log.i("Paises Response->", response);
                         List<Pais> paises = new ArrayList<Pais>();
                         try
                         {
                             JSONObject json = new JSONObject(response);
                             JSONArray childArray = new JSONArray(json.getString("d"));
-                            Log.i("Cantidad de Paises->", Integer.toString(childArray.length()));
+                            //Log.i("Cantidad de Paises->", Integer.toString(childArray.length()));
                             for (int i = 0; i < childArray.length(); i++) {
                                 JSONObject JSONObject = childArray.getJSONObject(i);
                                 if (!JSONObject.getString("Nombre").isEmpty()) {
