@@ -1,8 +1,11 @@
 package cl.weekmark.checkup;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -27,27 +30,21 @@ public class ResultsActivity extends AppCompatActivity {
             listItems=new ArrayList<String>();
             Patente[] patentes = (Patente[])getIntent().getSerializableExtra("patentes");
             if (patentes != null) {
-/*                for (Patente p : patentes) {
-
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("Nro Solicitud\n");
-                    sb.append( p.getNroSolicitud());
-
-                    sb.append("\nInt. CI.\n");
-                    sb.append(p.getCip());
-
-                    sb.append("\nTitulo\n");
-                    sb.append(p.getTitulo());
-                    listItems.add(sb.toString());
-                }
-                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1 , listItems);
-                setListAdapter(adapter);*/
-
-
                 ListAdapterPatente adapter = new ListAdapterPatente(this, new ArrayList<Patente>(Arrays.asList(patentes)));
-                ListView lv = (ListView) findViewById(R.id.lv_patentes);
+                final ListView lv = (ListView) findViewById(R.id.lv_patentes);
                 if (lv != null)
                     lv.setAdapter(adapter);
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Patente p =  (Patente)lv.getItemAtPosition(position);
+                        Log.i("Titulo->", p.getTitulo());
+                        Intent intent = new Intent(getApplicationContext(), DetailsPatenteActivity.class);
+                        intent.putExtra("patente", p);
+                        startActivity(intent);
+                    }
+                });
             }
 
         }catch (Exception ex)

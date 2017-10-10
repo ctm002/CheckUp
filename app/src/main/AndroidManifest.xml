@@ -21,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ResultsActivity"></activity>
+        <activity android:name=".ResultsActivity" />
+        <activity android:name=".DetailsPatenteActivity"></activity>
     </application>
 
 </manifest>

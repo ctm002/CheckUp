@@ -16,6 +16,10 @@ public class Patente implements Serializable {
     private  String mResumen;
     private  String mTitulo;
     private  String mSolicitante;
+    private  String mRepresentante;
+    private  String mFechaRegistro;
+    private  String mFechaSolicitud;
+    private  String mFechaPublicacion;
 
 
     public void setNroSolicitud(String mNroSolicitud) {
@@ -79,15 +83,36 @@ public class Patente implements Serializable {
             setCip(json.getString("cip"));
     }
 
-    public String toJSON() {
-        return this.content;
+    public String getRepresentante(){
+        return mRepresentante;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setRepresentante(String representante){
+         mRepresentante = representante;
     }
 
-    public String getContent() {
-        return content;
+    public String getFechaRegistro() {
+        return mFechaRegistro;
     }
+
+    public void setFechaRegistro(String mFechaRegistro) {
+        this.mFechaRegistro = mFechaRegistro;
+    }
+
+    public String getFechaSolicitud() {
+        return mFechaSolicitud;
+    }
+
+    public void setFechaSolicitud(String mFechaSolicitante) {
+        this.mFechaSolicitud = mFechaSolicitante;
+    }
+
+    public String getFechaPublicacion() {
+        return mFechaPublicacion;
+    }
+
+    public void setFechaPublicacion(String mFechaPublicacion) {
+        this.mFechaPublicacion = mFechaPublicacion;
+    }
+
 }

@@ -131,7 +131,6 @@ public class PatentePresenter {
                         NetworkResponse response = error.networkResponse;
                         if (response != null) {
                             Patente patente = new Patente();
-                            patente.setContent(error.getStackTrace().toString());
                             _View.setListPatentes(null);
                         }
                     }
@@ -226,9 +225,9 @@ public class PatentePresenter {
 
                                     ArrayList<Patente> patentes = new ArrayList<Patente>();
 
-                                    JSONArray arr = new JSONArray(strPatentes);
-                                    for (int i=0; i < arr.length(); i++) {
-                                        Patente p = new Patente(arr.getJSONObject(i));
+                                    JSONArray arrJSON = new JSONArray(strPatentes);
+                                    for (int i=0; i < arrJSON.length(); i++) {
+                                        Patente p = new Patente(arrJSON.getJSONObject(i));
                                         patentes.add(p);
                                     }
                                     _View.setHash(strHash);
@@ -247,7 +246,6 @@ public class PatentePresenter {
                             NetworkResponse response = error.networkResponse;
                             if (response != null) {
                                 Patente patente = new Patente();
-                                patente.setContent(error.getStackTrace().toString());
                                 _View.setListPatentes(null);
                             }
                         }
