@@ -2,7 +2,6 @@ package cl.weekmark.checkup;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +29,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,14 +56,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private PaisPresenter           mPaisPresenter;
     private TipoSolicitudPresenter  mTipoSolicitudPresenter;
     private PatentePresenter        mPatentePresenter;
-    private Spinner mCboPaisSolicitante;
-    private Spinner mCboPaisPrioridad;
-    private Spinner mCboTipoPatente;
+    private Spinner                 mCboPaisSolicitante;
+    private Spinner                 mCboPaisPrioridad;
+    private Spinner                 mCboTipoPatente;
     private String                  mHash = "";
     private String                  mIDW = "";
-    private String mTipoPatenteSelected;
-
-    private ProgressDialog progressDialog;
+    private String                  mTipoPatenteSelected;
+    private ProgressDialog          mProgressDialog;
 
 
     @Override
@@ -91,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        progressDialog= new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
     }
 
     private void initialize() {
@@ -147,11 +144,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-
         try {
             v.requestFocus();
-            progressDialog.setMessage("Consultando");
-            progressDialog.show();
+            mProgressDialog.setMessage("Consultando");
+            mProgressDialog.show();
             Thread t = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -238,6 +234,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Patente[] aPatentes = patentes.toArray(temp);
         Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
         intent.putExtra("patentes", aPatentes);
+        intent.putExtra("hash", getHash());
+        intent.putExtra("idw", getIDW());
+        intent.putExtra("cookie", getCookie());
+
         startActivity(intent);
 //        startActivityForResult(intent, 0);
     }
@@ -340,9 +340,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void setHideProgressDialog(boolean b){
 
-        if(progressDialog != null)
+        if(mProgressDialog != null)
         {
-            progressDialog.hide();
+            mProgressDialog.hide();
         }
     }
 

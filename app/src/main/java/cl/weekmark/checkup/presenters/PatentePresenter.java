@@ -110,7 +110,6 @@ public class PatentePresenter {
                                     alert.show();
                                 }
                             }
-
                             _View.setHideProgressDialog(true);
                         } catch (Exception ex) {
                             Log.e("Error Convert JSON", ex.getMessage());
@@ -135,8 +134,8 @@ public class PatentePresenter {
                         }
                     }
                 }
-        ) {
-
+        )
+        {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = null;
