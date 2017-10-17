@@ -85,9 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         this.mRequestQueue = Volley.newRequestQueue(this);
         initialize();
-
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
         mProgressDialog = new ProgressDialog(this);
     }
 
@@ -164,7 +162,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onResponse(String response) {
-        Pattern p = Pattern.compile("^\\s*setHash\\s*\\(\\s*['\"\"]([0-9a-f]*)['\"\"]\\s*,\\s*['\"\"]([0-9]*)['\"\"]\\s*\\)\\s*;", Pattern.MULTILINE);
+        String pattern = "^\\s*setHash\\s*\\(\\s*['\"\"]([0-9a-f]*)['\"\"]\\s*,\\s*['\"\"]([0-9]*)['\"\"]\\s*\\)\\s*;";
+        Pattern p = Pattern.compile(pattern, Pattern.MULTILINE);
         Matcher m = p.matcher(response);
 
         if (m.find()) {
@@ -335,7 +334,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public String getPaisPrioridad() {
         return mCboPaisPrioridad.getSelectedItem().toString();
     }
-
 
     @Override
     public void setHideProgressDialog(boolean b){
