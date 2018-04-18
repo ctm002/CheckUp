@@ -35,7 +35,7 @@ public class ListAdapterPatente extends BaseAdapter{
 
         View v = convertView;
         if (convertView == null) {
-            LayoutInflater inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inf = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inf.inflate(R.layout.item_patente, null);
         }
 
